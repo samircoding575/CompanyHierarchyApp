@@ -43,15 +43,14 @@ namespace CompanyHierarchyApp
                 return;
             }
 
-            // 2. SQL query to validate login and get role
+            // 2. SQL query (USE RoleId, NOT RoleName)
             string query = @"
 SELECT TOP 1 
     e.EmployeeId,
     e.IsVerified,
     e.IsActive,
-    r.RoleName
+    e.RoleId
 FROM Employees e
-INNER JOIN Roles r ON r.RoleId = e.RoleId
 WHERE e.Email = @email AND e.PasswordHash = @password";
 
             SqlCommand cmd = new SqlCommand(query, conn);
@@ -75,7 +74,7 @@ WHERE e.Email = @email AND e.PasswordHash = @password";
                 int employeeId = reader.GetInt32(0);
                 bool isVerified = reader.GetBoolean(1);
                 bool isActive = reader.GetBoolean(2);
-                string roleName = reader.GetString(3);
+                int roleId = reader.GetInt32(3);
 
                 reader.Close();
 
@@ -93,20 +92,30 @@ WHERE e.Email = @email AND e.PasswordHash = @password";
                     return;
                 }
 
-                // 7. Login success
-                MessageBox.Show("Login successful!\nRole: " + roleName);
-
-                // 8. Role-based navigation (optional)
-                /*
-                if (roleName == "HR")
-                    new HRDashboardForm(employeeId).Show();
-                else if (roleName == "Manager")
-                    new ManagerDashboardForm(employeeId).Show();
+                // 7. Role-based navigation
+                if (roleId == 1) // HR
+                {
+                    HRDashboardForm hrForm = new HRDashboardForm(employeeId);
+                    hrForm.Show();
+                }
+                //else if (roleId == 2) // Manager
+               // {
+                   // ManagerDashboardForm managerForm = new ManagerDashboardForm(employeeId);
+                 //   managerForm.Show();
+               // }
+                else if (roleId == 3) // Employee
+                {
+                    EmployeeDashboardForm employeeForm = new EmployeeDashboardForm(employeeId);
+                    employeeForm.Show();
+                }
                 else
-                    new EmployeeDashboardForm(employeeId).Show();
+                {
+                    MessageBox.Show("Unknown role. Access denied.");
+                    return;
+                }
 
+                // 8. Hide login form
                 this.Hide();
-                */
             }
             catch (Exception ex)
             {
@@ -117,7 +126,6 @@ WHERE e.Email = @email AND e.PasswordHash = @password";
                 conn.Close();
             }
         }
-
 
 
 
