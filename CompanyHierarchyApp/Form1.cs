@@ -43,30 +43,27 @@ namespace CompanyHierarchyApp
                 return;
             }
 
-            // 2. Hash password
-            string passwordHash = password;
-
-            // 3. SQL query to validate login and get role
+            // 2. SQL query to validate login and get role
             string query = @"
-    SELECT TOP 1 
-        e.EmployeeId,
-        e.IsVerified,
-        e.IsActive,
-        r.RoleName
-    FROM Employees e
-    INNER JOIN Roles r ON r.RoleId = e.RoleId
-    WHERE e.Email = @email AND e.PasswordHash = @passwordHash";
+SELECT TOP 1 
+    e.EmployeeId,
+    e.IsVerified,
+    e.IsActive,
+    r.RoleName
+FROM Employees e
+INNER JOIN Roles r ON r.RoleId = e.RoleId
+WHERE e.Email = @email AND e.PasswordHash = @password";
 
             SqlCommand cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@email", email);
-            cmd.Parameters.AddWithValue("@passwordHash", passwordHash);
+            cmd.Parameters.AddWithValue("@password", password);
 
             try
             {
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
 
-                // 4. Invalid credentials
+                // 3. Invalid credentials
                 if (!reader.Read())
                 {
                     reader.Close();
@@ -74,7 +71,7 @@ namespace CompanyHierarchyApp
                     return;
                 }
 
-                // 5. Read values
+                // 4. Read values
                 int employeeId = reader.GetInt32(0);
                 bool isVerified = reader.GetBoolean(1);
                 bool isActive = reader.GetBoolean(2);
@@ -82,26 +79,24 @@ namespace CompanyHierarchyApp
 
                 reader.Close();
 
-                // 6. Check active status
+                // 5. Check active status
                 if (!isActive)
                 {
                     MessageBox.Show("Your account is inactive. Please contact HR.");
                     return;
                 }
 
-                // 7. Check verification
+                // 6. Check verification
                 if (!isVerified)
                 {
-                    MessageBox.Show("Your email is not verified. Please verify your account.");
+                    MessageBox.Show("Your email is not verified.");
                     return;
                 }
 
-                // 8. Login success
+                // 7. Login success
                 MessageBox.Show("Login successful!\nRole: " + roleName);
 
-                // 9. (Optional for now) Role-based navigation
-                // You can add dashboard forms later
-                // Example:
+                // 8. Role-based navigation (optional)
                 /*
                 if (roleName == "HR")
                     new HRDashboardForm(employeeId).Show();
@@ -128,6 +123,7 @@ namespace CompanyHierarchyApp
 
 
 
+
         private void Form1_Load_1(object sender, EventArgs e)
         {
 
@@ -142,6 +138,72 @@ namespace CompanyHierarchyApp
         private void button3_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            string email = txtEmail.Text.Trim();
+
+            if (email == "")
+            {
+                MessageBox.Show("Please enter your email first.");
+                return;
+            }
+
+            // 1) Check if email exists
+            string checkUserQuery = "SELECT EmployeeId FROM Employees WHERE Email = @e;";
+
+            // 2) Insert verification code
+            string insertCodeQuery = @"
+INSERT INTO EmailVerifications (EmployeeId, Code, ExpiresAt, IsUsed, CreatedAt)
+VALUES (@id, @c, @x, 0, GETDATE());";
+
+            try
+            {
+                conn.Open();
+
+                int employeeId;
+                using (SqlCommand cmdCheck = new SqlCommand(checkUserQuery, conn))
+                {
+                    cmdCheck.Parameters.AddWithValue("@e", email);
+                    object result = cmdCheck.ExecuteScalar();
+
+                    if (result == null)
+                    {
+                        MessageBox.Show("No account found with this email.");
+                        return;
+                    }
+
+                    employeeId = (int)result;
+                }
+
+                // Generate simple 6-digit code
+                string code = new Random().Next(100000, 999999).ToString();
+                DateTime expiry = DateTime.Now.AddMinutes(10);
+
+                using (SqlCommand cmdInsert = new SqlCommand(insertCodeQuery, conn))
+                {
+                    cmdInsert.Parameters.AddWithValue("@id", employeeId);
+                    cmdInsert.Parameters.AddWithValue("@c", code);
+                    cmdInsert.Parameters.AddWithValue("@x", expiry);
+                    cmdInsert.ExecuteNonQuery();
+                }
+
+
+
+                // Open reset password form
+                new ResetPasswordForm(email, code).Show();
+                this.Hide();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+            finally
+            {
+                conn.Close();
+            }
         }
     }
 }
