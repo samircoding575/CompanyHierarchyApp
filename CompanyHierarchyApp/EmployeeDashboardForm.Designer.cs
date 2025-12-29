@@ -151,6 +151,7 @@
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "groupBox3";
+            this.groupBox3.Enter += new System.EventHandler(this.groupBox3_Enter);
             // 
             // button2
             // 
@@ -210,7 +211,7 @@
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(139, 26);
             this.logoutToolStripMenuItem.Text = "Logout";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
             // 
@@ -225,7 +226,7 @@
             // viewNotificationsToolStripMenuItem
             // 
             this.viewNotificationsToolStripMenuItem.Name = "viewNotificationsToolStripMenuItem";
-            this.viewNotificationsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.viewNotificationsToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
             this.viewNotificationsToolStripMenuItem.Text = "View Notifications";
             this.viewNotificationsToolStripMenuItem.Click += new System.EventHandler(this.viewNotificationsToolStripMenuItem_Click);
             // 

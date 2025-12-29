@@ -98,11 +98,11 @@ WHERE e.Email = @email AND e.PasswordHash = @password";
                     HRDashboardForm hrForm = new HRDashboardForm(employeeId);
                     hrForm.Show();
                 }
-                //else if (roleId == 2) // Manager
-               // {
-                   // ManagerDashboardForm managerForm = new ManagerDashboardForm(employeeId);
-                 //   managerForm.Show();
-               // }
+                else if (roleId == 2) // Manager
+                {
+                    ManagerDashboardForm managerForm = new ManagerDashboardForm(employeeId);
+                    managerForm.Show();
+                }
                 else if (roleId == 3) // Employee
                 {
                     EmployeeDashboardForm employeeForm = new EmployeeDashboardForm(employeeId);

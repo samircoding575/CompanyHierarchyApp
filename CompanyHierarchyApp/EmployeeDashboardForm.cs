@@ -54,9 +54,15 @@ namespace CompanyHierarchyApp
         void LoadMyTasks()
         {
             string query = @"
-    SELECT TaskId, Title, AssignedDate, Status
-    FROM Tasks
-    WHERE AssignedTo = @id";
+    SELECT 
+        t.TaskId,
+        t.Title,
+        t.AssignedDate,
+        t.Status,
+        e.FullName AS AssignedBy
+    FROM Tasks t
+    INNER JOIN Employees e ON e.EmployeeId = t.AssignedBy
+    WHERE t.AssignedTo = @id";
 
             DataTable dt = new DataTable();
 
@@ -71,6 +77,7 @@ namespace CompanyHierarchyApp
                 dgvMyTasks.DataSource = dt;
             }
         }
+
         void LoadPendingTasks()
         {
             string query = @"
@@ -179,6 +186,11 @@ VALUES (@t, @e, @m, 'Pending', '')", conn);
         {
             NotificationsForm nf = new NotificationsForm(LoggedInEmployeeId);
             nf.ShowDialog();
+        }
+
+        private void groupBox3_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }
