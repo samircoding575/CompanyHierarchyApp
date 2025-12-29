@@ -236,11 +236,16 @@ namespace CompanyHierarchyApp
         void LoadSubmissions()
         {
             string query = @"
-            SELECT s.SubmissionId, e.FullName, t.Title,
-                   s.SubmissionMessage, s.ReviewStatus
-            FROM TaskSubmissions s
-            INNER JOIN Employees e ON e.EmployeeId = s.EmployeeId
-            INNER JOIN Tasks t ON t.TaskId = s.TaskId";
+SELECT s.SubmissionId,
+       s.EmployeeId,
+       t.TaskId,
+       e.FullName,
+       t.Title,
+       s.SubmissionMessage
+FROM TaskSubmissions s
+INNER JOIN Employees e ON e.EmployeeId = s.EmployeeId
+INNER JOIN Tasks t ON t.TaskId = s.TaskId
+WHERE s.ReviewStatus = 'Pending'";
 
             DataTable dt = new DataTable();
 
@@ -269,28 +274,64 @@ namespace CompanyHierarchyApp
                 return;
             }
 
-            int id = Convert.ToInt32(
-                dgvSubmissions.SelectedRows[0].Cells["SubmissionId"].Value
-            );
+            int submissionId =
+                Convert.ToInt32(dgvSubmissions.SelectedRows[0].Cells["SubmissionId"].Value);
 
-            string query =
-                "UPDATE TaskSubmissions SET ReviewStatus = @s WHERE SubmissionId = @id";
+            int employeeId =
+                Convert.ToInt32(dgvSubmissions.SelectedRows[0].Cells["EmployeeId"].Value);
 
-            try
+            int taskId =
+                Convert.ToInt32(dgvSubmissions.SelectedRows[0].Cells["TaskId"].Value);
+
+            string taskTitle =
+                dgvSubmissions.SelectedRows[0].Cells["Title"].Value.ToString();
+
+            using (SqlConnection connection = new SqlConnection(connString))
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@s", status);
-                cmd.Parameters.AddWithValue("@id", id);
-                cmd.ExecuteNonQuery();
+                connection.Open();
 
-                LoadSubmissions();
+                // 1️⃣ Update submission status
+                SqlCommand cmd1 = new SqlCommand(@"
+UPDATE TaskSubmissions
+SET ReviewStatus = @s,
+    ReviewMessage = @m
+WHERE SubmissionId = @id", connection);
+
+                cmd1.Parameters.AddWithValue("@s", status);
+                cmd1.Parameters.AddWithValue("@m",
+                    status == "Approved"
+                        ? "Approved by HR"
+                        : "Rejected. Please revise and resubmit.");
+                cmd1.Parameters.AddWithValue("@id", submissionId);
+                cmd1.ExecuteNonQuery();
+
+                // 2️⃣ Update task status
+                SqlCommand cmd2 = new SqlCommand(
+                    "UPDATE Tasks SET Status = @ts WHERE TaskId = @tid", connection);
+
+                cmd2.Parameters.AddWithValue("@tid", taskId);
+                cmd2.Parameters.AddWithValue("@ts",
+                    status == "Approved" ? "Completed" : "Rejected");
+                cmd2.ExecuteNonQuery();
+
+                // 3️⃣ Insert notification
+                SqlCommand cmd3 = new SqlCommand(@"
+INSERT INTO Notifications (EmployeeId, Message)
+VALUES (@eid, @msg)", connection);
+
+                cmd3.Parameters.AddWithValue("@eid", employeeId);
+                cmd3.Parameters.AddWithValue("@msg",
+                    status == "Approved"
+                        ? $"Your task '{taskTitle}' was approved and closed."
+                        : $"Your task '{taskTitle}' was rejected. Please revise and resubmit.");
+
+                cmd3.ExecuteNonQuery();
             }
-            finally
-            {
-                conn.Close();
-            }
+
+            LoadSubmissions(); // refresh HR grid
         }
+
+
 
         private void button7_Click(object sender, EventArgs e)
         {
@@ -321,6 +362,21 @@ namespace CompanyHierarchyApp
         private void dgvSubmissions_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
              
+        }
+
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void logoutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            // Show login form again
+            Form1 loginForm = new Form1();
+            loginForm.Show();
+
+            // Close current HR dashboard
+            this.Close();
         }
     }
 }
