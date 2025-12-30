@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblFullName = new System.Windows.Forms.Label();
             this.lblEmail = new System.Windows.Forms.Label();
             this.lblRole = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -47,6 +46,7 @@
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notificationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewNotificationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblFullName = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMyTasks)).BeginInit();
@@ -67,13 +67,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
-            // 
-            // lblFullName
-            // 
-            this.lblFullName.Location = new System.Drawing.Point(325, 41);
-            this.lblFullName.Name = "lblFullName";
-            this.lblFullName.Size = new System.Drawing.Size(143, 16);
-            this.lblFullName.TabIndex = 3;
             // 
             // lblEmail
             // 
@@ -230,6 +223,13 @@
             this.viewNotificationsToolStripMenuItem.Text = "View Notifications";
             this.viewNotificationsToolStripMenuItem.Click += new System.EventHandler(this.viewNotificationsToolStripMenuItem_Click);
             // 
+            // lblFullName
+            // 
+            this.lblFullName.Location = new System.Drawing.Point(365, 41);
+            this.lblFullName.Name = "lblFullName";
+            this.lblFullName.Size = new System.Drawing.Size(129, 16);
+            this.lblFullName.TabIndex = 3;
+            // 
             // EmployeeDashboardForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -256,7 +256,6 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label lblFullName;
         private System.Windows.Forms.Label lblEmail;
         private System.Windows.Forms.Label lblRole;
         private System.Windows.Forms.Label label1;
@@ -274,5 +273,6 @@
         private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem notificationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewNotificationsToolStripMenuItem;
+        private System.Windows.Forms.Label lblFullName;
     }
 }

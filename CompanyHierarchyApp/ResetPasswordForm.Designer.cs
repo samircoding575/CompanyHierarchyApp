@@ -53,9 +53,9 @@
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F);
-            this.button2.Location = new System.Drawing.Point(371, 263);
+            this.button2.Location = new System.Drawing.Point(291, 283);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(73, 36);
+            this.button2.Size = new System.Drawing.Size(91, 24);
             this.button2.TabIndex = 8;
             this.button2.Text = "Reset Password";
             this.button2.UseVisualStyleBackColor = true;
