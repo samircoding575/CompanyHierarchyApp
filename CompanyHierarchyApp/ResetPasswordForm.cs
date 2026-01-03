@@ -176,7 +176,6 @@ namespace CompanyHierarchyApp
             string code = txtCode.Text.Trim();
             string newPassword = txtNewPassword.Text;
 
-            // Validation: empty or placeholder text
             if (code == "" || code == "Verification Code" ||
                 newPassword == "" || newPassword == "New Password")
             {
@@ -185,7 +184,7 @@ namespace CompanyHierarchyApp
             }
 
             string getUserQuery =
-                "SELECT EmployeeId FROM Employees WHERE Email = @e;";
+                "SELECT EmployeeId, PasswordHash FROM Employees WHERE Email = @e;";
 
             string checkCodeQuery = @"
 SELECT TOP 1 VerificationId
@@ -204,26 +203,35 @@ ORDER BY CreatedAt DESC;";
 
             try
             {
-                // 🔒 Safety: make sure connection is not already open
                 if (conn.State == ConnectionState.Open)
                     conn.Close();
 
                 conn.Open();
 
-                // 1️⃣ Get employee ID from email
+                // 1️⃣ Get employee ID AND current password
                 SqlCommand cmdUser = new SqlCommand(getUserQuery, conn);
                 cmdUser.Parameters.AddWithValue("@e", _email);
 
-                object res = cmdUser.ExecuteScalar();
-                if (res == null)
+                SqlDataReader reader = cmdUser.ExecuteReader();
+                if (!reader.Read())
                 {
+                    reader.Close();
                     MessageBox.Show("User not found.");
                     return;
                 }
 
-                int employeeId = Convert.ToInt32(res);
+                int employeeId = reader.GetInt32(0);
+                string oldPassword = reader.GetString(1);
+                reader.Close();
 
-                // 2️⃣ Validate verification code
+                // 2️⃣ Check if new password is same as old
+                if (oldPassword == newPassword)
+                {
+                    MessageBox.Show("New password must be different from the old password.");
+                    return;
+                }
+
+                // 3️⃣ Validate verification code
                 SqlCommand cmdCheck = new SqlCommand(checkCodeQuery, conn);
                 cmdCheck.Parameters.AddWithValue("@id", employeeId);
                 cmdCheck.Parameters.AddWithValue("@c", code);
@@ -237,13 +245,13 @@ ORDER BY CreatedAt DESC;";
 
                 int verificationId = Convert.ToInt32(result);
 
-                // 3️⃣ Update password
+                // 4️⃣ Update password
                 SqlCommand cmdUpdate = new SqlCommand(updatePasswordQuery, conn);
                 cmdUpdate.Parameters.AddWithValue("@p", newPassword);
                 cmdUpdate.Parameters.AddWithValue("@id", employeeId);
                 cmdUpdate.ExecuteNonQuery();
 
-                // 4️⃣ Mark verification code as used
+                // 5️⃣ Mark verification code as used
                 SqlCommand cmdUsed = new SqlCommand(markUsedQuery, conn);
                 cmdUsed.Parameters.AddWithValue("@v", verificationId);
                 cmdUsed.ExecuteNonQuery();
@@ -262,6 +270,9 @@ ORDER BY CreatedAt DESC;";
                 conn.Close();
             }
         }
+
+
+
 
 
         private void lblVerificationCode_Click(object sender, EventArgs e)

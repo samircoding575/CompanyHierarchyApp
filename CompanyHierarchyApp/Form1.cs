@@ -282,13 +282,13 @@ namespace CompanyHierarchyApp
                 {
                     ManagerDashboardForm managerForm = new ManagerDashboardForm(employeeId);
                     managerForm.Show();
-                    MessageBox.Show("Manager Login Successful (Add Form Here)");
+                    MessageBox.Show("Manager Login Successful ");
                 }
                 else if (roleId == 3) // Employee
                 {
                     EmployeeDashboardForm employeeForm = new EmployeeDashboardForm(employeeId);
                     employeeForm.Show();
-                    MessageBox.Show("Employee Login Successful (Add Form Here)");
+                    MessageBox.Show("Employee Login Successful ");
                 }
                 else
                 {
