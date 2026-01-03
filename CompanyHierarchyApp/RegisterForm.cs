@@ -62,28 +62,53 @@ namespace CompanyHierarchyApp
 
         void StyleInputBox(TextBox txt, string placeholder, bool isPasswordBox)
         {
-            // Reset Styles
+            // Respect Designer positioning & size
             txt.BorderStyle = BorderStyle.None;
             txt.BackColor = backgroundColor;
-            txt.Font = new Font("Segoe UI", 12);
-            txt.AutoSize = false;
-            txt.Height = 30;
+            txt.Font = new Font("Segoe UI", 12F, FontStyle.Regular);
 
-            // Apply Safe Placeholder Logic
+            // Placeholder logic (unchanged behavior)
             ApplySafePlaceholder(txt, placeholder, isPasswordBox);
 
-            // Add Decorative Underline
-            Panel underline = new Panel();
-            underline.Size = new Size(txt.Width, 2);
-            underline.Location = new Point(txt.Location.X, txt.Location.Y + txt.Height);
-            underline.BackColor = Color.LightGray;
-            this.Controls.Add(underline);
+            // Create underline safely
+            Panel underline = new Panel
+            {
+                Height = 2,
+                Width = txt.Width,
+                BackColor = Color.LightGray,
+                Left = txt.Left,
+                Top = txt.Bottom + 2
+            };
+
+            // IMPORTANT: add underline to SAME parent
+            txt.Parent.Controls.Add(underline);
             underline.BringToFront();
 
-            // Focus Animation
-            txt.GotFocus += (s, e) => { underline.BackColor = primaryColor; };
-            txt.LostFocus += (s, e) => { underline.BackColor = Color.LightGray; };
+            // Focus color change (visual only)
+            txt.GotFocus += (s, e) =>
+            {
+                underline.BackColor = primaryColor;
+            };
+
+            txt.LostFocus += (s, e) =>
+            {
+                underline.BackColor = Color.LightGray;
+            };
+
+            // Keep underline aligned if textbox moves or resizes
+            txt.LocationChanged += (s, e) =>
+            {
+                underline.Left = txt.Left;
+                underline.Top = txt.Bottom + 2;
+            };
+
+            txt.SizeChanged += (s, e) =>
+            {
+                underline.Width = txt.Width;
+                underline.Top = txt.Bottom + 2;
+            };
         }
+
 
         void ApplySafePlaceholder(TextBox txt, string placeholder, bool isPassword)
         {
@@ -229,6 +254,11 @@ namespace CompanyHierarchyApp
         {
             new Form1().Show();
             this.Hide();
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -74,28 +74,53 @@ namespace CompanyHierarchyApp
 
         void StyleInputBox(TextBox txt, string placeholder, bool isPasswordBox)
         {
-            // Reset Styles
+            // Respect Designer-defined size & position
             txt.BorderStyle = BorderStyle.None;
             txt.BackColor = backgroundColor;
-            txt.Font = new Font("Segoe UI", 12);
-            txt.AutoSize = false;
-            txt.Height = 30;
+            txt.Font = new Font("Segoe UI", 12F, FontStyle.Regular);
 
-            // Apply Safe Placeholder Logic
+            // Placeholder logic (unchanged)
             ApplySafePlaceholder(txt, placeholder, isPasswordBox);
 
-            // Add Decorative Underline
-            Panel underline = new Panel();
-            underline.Size = new Size(txt.Width, 2);
-            underline.Location = new Point(txt.Location.X, txt.Location.Y + txt.Height);
-            underline.BackColor = Color.LightGray;
-            this.Controls.Add(underline);
+            // Create underline safely (no layout shift)
+            Panel underline = new Panel
+            {
+                Height = 2,
+                Width = txt.Width,
+                BackColor = Color.LightGray,
+                Left = txt.Left,
+                Top = txt.Bottom + 2
+            };
+
+            // IMPORTANT: attach underline to the same parent
+            txt.Parent.Controls.Add(underline);
             underline.BringToFront();
 
-            // Focus Animation
-            txt.GotFocus += (s, e) => { underline.BackColor = primaryColor; };
-            txt.LostFocus += (s, e) => { underline.BackColor = Color.LightGray; };
+            // Visual-only focus behavior
+            txt.GotFocus += (s, e) =>
+            {
+                underline.BackColor = primaryColor;
+            };
+
+            txt.LostFocus += (s, e) =>
+            {
+                underline.BackColor = Color.LightGray;
+            };
+
+            // Keep underline synced if Designer layout changes
+            txt.LocationChanged += (s, e) =>
+            {
+                underline.Left = txt.Left;
+                underline.Top = txt.Bottom + 2;
+            };
+
+            txt.SizeChanged += (s, e) =>
+            {
+                underline.Width = txt.Width;
+                underline.Top = txt.Bottom + 2;
+            };
         }
+
 
         void ApplySafePlaceholder(TextBox txt, string placeholder, bool isPassword)
         {
@@ -151,7 +176,7 @@ namespace CompanyHierarchyApp
             string code = txtCode.Text.Trim();
             string newPassword = txtNewPassword.Text;
 
-            // Updated Validation: Check for empty string OR placeholder text
+            // Validation: empty or placeholder text
             if (code == "" || code == "Verification Code" ||
                 newPassword == "" || newPassword == "New Password")
             {
@@ -159,60 +184,72 @@ namespace CompanyHierarchyApp
                 return;
             }
 
-            string getUserQuery = "SELECT EmployeeId FROM Employees WHERE Email = @e;";
+            string getUserQuery =
+                "SELECT EmployeeId FROM Employees WHERE Email = @e;";
 
             string checkCodeQuery = @"
-                SELECT TOP 1 VerificationId
-                FROM EmailVerifications
-                WHERE EmployeeId = @id AND Code = @c AND IsUsed = 0 AND ExpiresAt >= GETDATE()
-                ORDER BY CreatedAt DESC;";
+SELECT TOP 1 VerificationId
+FROM EmailVerifications
+WHERE EmployeeId = @id
+  AND Code = @c
+  AND IsUsed = 0
+  AND ExpiresAt >= GETDATE()
+ORDER BY CreatedAt DESC;";
 
-            string updatePasswordQuery = "UPDATE Employees SET PasswordHash = @p WHERE EmployeeId = @id;";
-            string markUsedQuery = "UPDATE EmailVerifications SET IsUsed = 1 WHERE VerificationId = @v;";
+            string updatePasswordQuery =
+                "UPDATE Employees SET PasswordHash = @p WHERE EmployeeId = @id;";
+
+            string markUsedQuery =
+                "UPDATE EmailVerifications SET IsUsed = 1 WHERE VerificationId = @v;";
 
             try
             {
+                // 🔒 Safety: make sure connection is not already open
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+
                 conn.Open();
 
-                int employeeId;
-                using (SqlCommand cmdUser = new SqlCommand(getUserQuery, conn))
+                // 1️⃣ Get employee ID from email
+                SqlCommand cmdUser = new SqlCommand(getUserQuery, conn);
+                cmdUser.Parameters.AddWithValue("@e", _email);
+
+                object res = cmdUser.ExecuteScalar();
+                if (res == null)
                 {
-                    cmdUser.Parameters.AddWithValue("@e", _email);
-                    object res = cmdUser.ExecuteScalar();
-                    // Ideally check for null here, but assuming flow comes from valid email in Form1
-                    employeeId = (int)res;
+                    MessageBox.Show("User not found.");
+                    return;
                 }
 
-                int verificationId;
-                using (SqlCommand cmdCheck = new SqlCommand(checkCodeQuery, conn))
+                int employeeId = Convert.ToInt32(res);
+
+                // 2️⃣ Validate verification code
+                SqlCommand cmdCheck = new SqlCommand(checkCodeQuery, conn);
+                cmdCheck.Parameters.AddWithValue("@id", employeeId);
+                cmdCheck.Parameters.AddWithValue("@c", code);
+
+                object result = cmdCheck.ExecuteScalar();
+                if (result == null)
                 {
-                    cmdCheck.Parameters.AddWithValue("@id", employeeId);
-                    cmdCheck.Parameters.AddWithValue("@c", code);
-                    object result = cmdCheck.ExecuteScalar();
-
-                    if (result == null)
-                    {
-                        MessageBox.Show("Invalid or expired code.");
-                        return;
-                    }
-
-                    verificationId = (int)result;
+                    MessageBox.Show("Invalid or expired code.");
+                    return;
                 }
 
-                using (SqlCommand cmdUpdate = new SqlCommand(updatePasswordQuery, conn))
-                {
-                    cmdUpdate.Parameters.AddWithValue("@p", newPassword);
-                    cmdUpdate.Parameters.AddWithValue("@id", employeeId);
-                    cmdUpdate.ExecuteNonQuery();
-                }
+                int verificationId = Convert.ToInt32(result);
 
-                using (SqlCommand cmdUsed = new SqlCommand(markUsedQuery, conn))
-                {
-                    cmdUsed.Parameters.AddWithValue("@v", verificationId);
-                    cmdUsed.ExecuteNonQuery();
-                }
+                // 3️⃣ Update password
+                SqlCommand cmdUpdate = new SqlCommand(updatePasswordQuery, conn);
+                cmdUpdate.Parameters.AddWithValue("@p", newPassword);
+                cmdUpdate.Parameters.AddWithValue("@id", employeeId);
+                cmdUpdate.ExecuteNonQuery();
+
+                // 4️⃣ Mark verification code as used
+                SqlCommand cmdUsed = new SqlCommand(markUsedQuery, conn);
+                cmdUsed.Parameters.AddWithValue("@v", verificationId);
+                cmdUsed.ExecuteNonQuery();
 
                 MessageBox.Show("Password reset successfully. You can now log in.");
+
                 new Form1().Show();
                 this.Hide();
             }
@@ -226,7 +263,13 @@ namespace CompanyHierarchyApp
             }
         }
 
+
         private void lblVerificationCode_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
         {
 
         }

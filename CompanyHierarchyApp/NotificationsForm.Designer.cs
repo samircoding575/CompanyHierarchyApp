@@ -41,6 +41,7 @@
             this.dgvNotifications.RowTemplate.Height = 24;
             this.dgvNotifications.Size = new System.Drawing.Size(415, 129);
             this.dgvNotifications.TabIndex = 4;
+            this.dgvNotifications.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvNotifications_CellContentClick);
             // 
             // NotificationsForm
             // 
