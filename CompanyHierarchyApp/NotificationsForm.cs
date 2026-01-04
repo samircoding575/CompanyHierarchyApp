@@ -79,39 +79,134 @@ namespace CompanyHierarchyApp
         void LoadNotifications()
         {
             string query = @"
-                SELECT Message, CreatedAt, IsRead
-                FROM Notifications
-                WHERE EmployeeId = @id
-                ORDER BY CreatedAt DESC";
+        SELECT Message, CreatedAt, IsRead
+        FROM Notifications
+        WHERE EmployeeId = @id
+        ORDER BY CreatedAt DESC";
 
             DataTable dt = new DataTable();
+
+            // Define columns explicitly (important when using DataReader)
+            dt.Columns.Add("Message", typeof(string));
+            dt.Columns.Add("CreatedAt", typeof(DateTime));
+            dt.Columns.Add("IsRead", typeof(bool));
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@id", LoggedInEmployeeId);
 
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
-                dgvNotifications.DataSource = dt;
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", LoggedInEmployeeId);
 
-                // Optional: Formatting columns after data load
-                if (dgvNotifications.Columns["CreatedAt"] != null)
-                {
-                    dgvNotifications.Columns["CreatedAt"].HeaderText = "Date";
-                    dgvNotifications.Columns["CreatedAt"].DefaultCellStyle.Format = "MM/dd/yyyy HH:mm";
-                }
-                if (dgvNotifications.Columns["IsRead"] != null)
-                {
-                    dgvNotifications.Columns["IsRead"].HeaderText = "Read?";
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            DataRow row = dt.NewRow();
+                            row["Message"] = reader.GetString(0);
+                            row["CreatedAt"] = reader.GetDateTime(1);
+                            row["IsRead"] = reader.GetBoolean(2);
+                            dt.Rows.Add(row);
+                        }
+                    }
                 }
             }
+
+            dgvNotifications.DataSource = dt;
+
+            // Formatting after binding
+            if (dgvNotifications.Columns["CreatedAt"] != null)
+            {
+                dgvNotifications.Columns["CreatedAt"].HeaderText = "Date";
+                dgvNotifications.Columns["CreatedAt"].DefaultCellStyle.Format = "MM/dd/yyyy HH:mm";
+            }
+
+            if (dgvNotifications.Columns["IsRead"] != null)
+            {
+                dgvNotifications.Columns["IsRead"].HeaderText = "Read?";
+            }
         }
+
 
         private void dgvNotifications_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (dgvNotifications.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Select at least one notification.");
+                return;
+            }
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+
+                foreach (DataGridViewRow row in dgvNotifications.SelectedRows)
+                {
+                    string message = row.Cells["Message"].Value.ToString();
+                    DateTime createdAt = Convert.ToDateTime(row.Cells["CreatedAt"].Value);
+
+                    using (SqlCommand cmd = new SqlCommand(@"
+UPDATE Notifications
+SET IsRead = 1
+WHERE EmployeeId = @eid
+AND Message = @msg
+AND CreatedAt = @dt", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@eid", LoggedInEmployeeId);
+                        cmd.Parameters.AddWithValue("@msg", message);
+                        cmd.Parameters.AddWithValue("@dt", createdAt);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            LoadNotifications();
+        }
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (dgvNotifications.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Select a notification to delete.");
+                return;
+            }
+
+            if (MessageBox.Show("Delete selected notification(s)?",
+                "Confirm", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+
+                foreach (DataGridViewRow row in dgvNotifications.SelectedRows)
+                {
+                    string message = row.Cells["Message"].Value.ToString();
+                    DateTime createdAt = Convert.ToDateTime(row.Cells["CreatedAt"].Value);
+
+                    SqlCommand cmd = new SqlCommand(@"
+DELETE FROM Notifications
+WHERE EmployeeId = @eid
+AND Message = @msg
+AND CreatedAt = @dt", conn);
+
+                    cmd.Parameters.AddWithValue("@eid", LoggedInEmployeeId);
+                    cmd.Parameters.AddWithValue("@msg", message);
+                    cmd.Parameters.AddWithValue("@dt", createdAt);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            LoadNotifications();
+        
+}
     }
 }
