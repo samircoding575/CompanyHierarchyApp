@@ -384,5 +384,10 @@ VALUES (@id, @c, @x, 0, GETDATE());";
         {
 
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -51,7 +51,8 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(68, 66);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
+            this.label1.Location = new System.Drawing.Point(83, 66);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(128, 16);
             this.label1.TabIndex = 1;
@@ -84,10 +85,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.8F);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.8F);
             this.label2.Location = new System.Drawing.Point(71, 18);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(140, 26);
+            this.label2.Size = new System.Drawing.Size(175, 31);
             this.label2.TabIndex = 5;
             this.label2.Text = "Registeration";
             // 
@@ -111,9 +112,9 @@
             this.groupBox1.Controls.Add(this.txtEmail);
             this.groupBox1.Controls.Add(this.txtPassword);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(158, 31);
+            this.groupBox1.Location = new System.Drawing.Point(105, 38);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(294, 357);
+            this.groupBox1.Size = new System.Drawing.Size(285, 353);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
@@ -131,7 +132,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(593, 425);
+            this.ClientSize = new System.Drawing.Size(484, 456);
             this.Controls.Add(this.groupBox1);
             this.Name = "RegisterForm";
             this.Text = "RegisterForm";

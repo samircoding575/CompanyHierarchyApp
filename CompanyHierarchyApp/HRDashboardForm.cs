@@ -8,29 +8,29 @@ namespace CompanyHierarchyApp
 {
     public partial class HRDashboardForm : Form
     {
-        // =========================
-        // Database Connection
-        // =========================
-        static string connString = "Data Source=.\\SQLEXPRESS;Initial Catalog=CompanyDB;Integrated Security=True;TrustServerCertificate=True";
+        // =========================
+        // Database Connection
+        // =========================
+        static string connString = "Data Source=.\\SQLEXPRESS;Initial Catalog=CompanyDB;Integrated Security=True;TrustServerCertificate=True";
 
         SqlConnection conn = new SqlConnection(connString);
 
-        // Logged-in HR employee ID (set from login)
-        int LoggedInEmployeeId;
+        // Logged-in HR employee ID (set from login)
+        int LoggedInEmployeeId;
 
-        // =========================
-        // DESIGN THEME COLORS
-        // =========================
-        private Color primaryColor = Color.FromArgb(41, 128, 185);   // Blue
-        private Color successColor = Color.FromArgb(39, 174, 96);    // Green
-        private Color dangerColor = Color.FromArgb(192, 57, 43);     // Red
-        private Color darkText = Color.FromArgb(44, 62, 80);         // Dark Gray
-        private Color bgColor = Color.WhiteSmoke;
+        // =========================
+        // DESIGN THEME COLORS
+        // =========================
+        private Color primaryColor = Color.FromArgb(41, 128, 185);   // Blue
+        private Color successColor = Color.FromArgb(39, 174, 96);    // Green
+        private Color dangerColor = Color.FromArgb(192, 57, 43);     // Red
+        private Color darkText = Color.FromArgb(44, 62, 80);         // Dark Gray
+        private Color bgColor = Color.WhiteSmoke;
 
-        // =========================
-        // Constructors
-        // =========================
-        public HRDashboardForm()
+        // =========================
+        // Constructors
+        // =========================
+        public HRDashboardForm()
         {
             InitializeComponent();
         }
@@ -41,26 +41,26 @@ namespace CompanyHierarchyApp
             LoggedInEmployeeId = employeeId;
         }
 
-        // =========================
-        // FORM LOAD
-        // =========================
-        private void HRDashboardForm_Load(object sender, EventArgs e)
+        // =========================
+        // FORM LOAD
+        // =========================
+        private void HRDashboardForm_Load(object sender, EventArgs e)
         {
-            // 1. Apply UI Styles before loading data
-            ApplyHRTheme();
+            // 1. Apply UI Styles before loading data
+            ApplyHRTheme();
             LoadEmployeeFilterComboBox(); // ✅ NEW
-            // 2. Load Data
-            LoadEmployees();
+            // 2. Load Data
+            LoadEmployees();
             LoadEmployeesComboBox();
             LoadSubmissions();
         }
         void LoadEmployeeFilterComboBox()
         {
             string query = @"
-        SELECT EmployeeId, FullName
-        FROM Employees
-        WHERE IsActive = 1
-        ORDER BY FullName";
+        SELECT EmployeeId, FullName
+        FROM Employees
+        WHERE IsActive = 1
+        ORDER BY FullName";
 
             DataTable dt = new DataTable();
             SqlCommand cmd = new SqlCommand(query, conn);
@@ -94,90 +94,117 @@ namespace CompanyHierarchyApp
         // =========================
         private void ApplyHRTheme()
         {
-            // Form Setup
+            // 1. Form Setup
             this.Text = "HR Administration Dashboard";
             this.WindowState = FormWindowState.Maximized;
             this.BackColor = bgColor;
             this.Font = new Font("Segoe UI", 10);
 
-            // MenuStrip Styling (if exists)
+            // 2. MenuStrip Styling
             if (this.MainMenuStrip != null)
             {
                 this.MainMenuStrip.BackColor = primaryColor;
                 this.MainMenuStrip.ForeColor = Color.White;
+                this.MainMenuStrip.RenderMode = ToolStripRenderMode.System;
             }
 
-            // Style all DataGridViews
-            StyleGrid(dgvEmployees);
-            StyleGrid(dgvEmployeeTasks);
-            StyleGrid(dgvSubmissions);
-
-            // Style Buttons (Find controls by name or logic)
-            StyleButton(button2, primaryColor);
-            StyleButton(button3, dangerColor);  // Delete Employee
-            StyleButton(button4, successColor);
-            StyleButton(button1, primaryColor); // Assign Task
-            StyleButton(button7, successColor); // Approve
-            StyleButton(button6, dangerColor);  // Reject
-
-            // Style Inputs
-            StyleInput(txtTaskTitle);
-            StyleInput(rtbTaskDescription);
-            StyleInput(cbEmployees);
-
-            // Find and Style TabControl
+            // 3. TabControl Styling
             foreach (Control c in this.Controls)
             {
                 if (c is TabControl tc)
                 {
                     tc.Appearance = TabAppearance.FlatButtons;
                     tc.SizeMode = TabSizeMode.Fixed;
-                    tc.ItemSize = new Size(180, 45); // Bigger tabs
-                    tc.Padding = new Point(10, 5);
+                    tc.ItemSize = new Size(150, 40);
                     tc.Font = new Font("Segoe UI", 11, FontStyle.Bold);
 
-                    // Hook draw event to color tabs if needed, but FlatButtons is usually enough for simple style
+                    // Iterate over tab pages to style the Panels we added manually
+                    foreach (TabPage page in tc.TabPages)
+                    {
+                        page.BackColor = Color.WhiteSmoke;
+                        page.Padding = new Padding(0); // Removes white border gap
+
+                        // Find the Panels you added in Designer and color them
+                        foreach (Control child in page.Controls)
+                        {
+                            if (child is Panel pnl)
+                            {
+                                // If it's a Top/Bottom action bar, give it a clean white background
+                                if (pnl.Dock == DockStyle.Top || pnl.Dock == DockStyle.Bottom)
+                                {
+                                    pnl.BackColor = Color.White;
+                                    pnl.Padding = new Padding(10); // Spacing for buttons inside
+                                }
+                            }
+                        }
+                    }
                 }
             }
+
+            // 4. Style DataGridViews (Clean, Professional Look)
+            StyleGrid(dgvEmployees);
+            StyleGrid(dgvEmployeeTasks);
+            StyleGrid(dgvSubmissions);
+
+            // 5. Style Buttons (Mapping your buttons to colors)
+            // Employees Tab
+            StyleButton(button2, primaryColor); // Refresh
+            StyleButton(button3, dangerColor);  // Delete
+            StyleButton(button4, successColor); // Activate (if you have one)
+
+            // Assign Task Tab
+            StyleButton(button1, primaryColor); // Assign
+
+            // Submissions Tab
+            StyleButton(button7, successColor); // Approve
+            StyleButton(button6, dangerColor);  // Reject
+
+            // 6. Style Inputs
+            StyleInput(txtTaskTitle);
+            StyleInput(rtbTaskDescription);
+            StyleInput(cbEmployees);
+            StyleInput(cbEmployeeFilter);
         }
+
+        // Keep your existing StyleGrid, StyleButton, and StyleInput helper methods exactly as they are.
 
         private void StyleGrid(DataGridView grid)
         {
             if (grid == null) return;
 
-            // 1. Basic Visuals
-            grid.BackgroundColor = Color.White;
+            // 1. Basic Visuals
+            grid.BackgroundColor = Color.White;
             grid.BorderStyle = BorderStyle.None;
             grid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             grid.EnableHeadersVisualStyles = false;
 
-            // 2. Header Style
-            grid.ColumnHeadersDefaultCellStyle.BackColor = primaryColor;
+            // 2. Header Style
+            grid.ColumnHeadersDefaultCellStyle.BackColor = primaryColor;
             grid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             grid.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             grid.ColumnHeadersHeight = 40;
             grid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
 
-            // 3. Row Style
-            grid.DefaultCellStyle.BackColor = Color.White;
+            // 3. Row Style
+            grid.DefaultCellStyle.BackColor = Color.White;
             grid.DefaultCellStyle.ForeColor = Color.Black;
             grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(214, 234, 248); // Light Blue selection
-            grid.DefaultCellStyle.SelectionForeColor = Color.Black;
+            grid.DefaultCellStyle.SelectionForeColor = Color.Black;
             grid.DefaultCellStyle.Padding = new Padding(5);
             grid.DefaultCellStyle.Font = new Font("Segoe UI", 10);
             grid.RowTemplate.Height = 35;
             grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 249, 249);
 
-            // 4. Layout & Interaction (THE FIX)
-            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            grid.RowHeadersVisible = false;       // Hides the left selector column
+            // 4. Layout & Interaction (THE FIX)
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.RowHeadersVisible = false;       // Hides the left selector column
 
-            // This line is the fix: It lets you click ANY text in the row to select the whole row
-            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            // This line is the fix: It lets you click ANY text in the row to select the whole row
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
-            grid.MultiSelect = false;             // Forces single row selection (easier for logic)
-            grid.ReadOnly = true;                 // Prevents user from typing inside the grid
-        }
+            grid.MultiSelect = false;             // Forces single row selection (easier for logic)
+            grid.ReadOnly = true;                 // Prevents user from typing inside the grid
+        }
 
         private void StyleButton(Button btn, Color color)
         {

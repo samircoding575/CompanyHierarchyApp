@@ -38,18 +38,21 @@
             this.txtTaskTitle = new System.Windows.Forms.TextBox();
             this.cbEmployees = new System.Windows.Forms.ComboBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.label5 = new System.Windows.Forms.Label();
             this.dgvSubmissions = new System.Windows.Forms.DataGridView();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logoutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSubmissions)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -64,13 +67,7 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Controls.Add(this.label1);
-            this.tabPage2.Controls.Add(this.button1);
-            this.tabPage2.Controls.Add(this.rtbTaskDescription);
-            this.tabPage2.Controls.Add(this.txtTaskTitle);
-            this.tabPage2.Controls.Add(this.cbEmployees);
+            this.tabPage2.Controls.Add(this.panel1);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -83,7 +80,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(17, 121);
+            this.label3.Location = new System.Drawing.Point(3, 127);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(109, 16);
             this.label3.TabIndex = 9;
@@ -92,7 +89,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(17, 80);
+            this.label2.Location = new System.Drawing.Point(3, 78);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(67, 16);
             this.label2.TabIndex = 8;
@@ -101,7 +98,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 32);
+            this.label1.Location = new System.Drawing.Point(3, 25);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(69, 16);
             this.label1.TabIndex = 7;
@@ -109,7 +106,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(184, 183);
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(422, 264);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(165, 23);
             this.button1.TabIndex = 3;
@@ -119,7 +117,9 @@
             // 
             // rtbTaskDescription
             // 
-            this.rtbTaskDescription.Location = new System.Drawing.Point(184, 118);
+            this.rtbTaskDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbTaskDescription.Location = new System.Drawing.Point(266, 124);
             this.rtbTaskDescription.Name = "rtbTaskDescription";
             this.rtbTaskDescription.Size = new System.Drawing.Size(217, 47);
             this.rtbTaskDescription.TabIndex = 2;
@@ -127,25 +127,25 @@
             // 
             // txtTaskTitle
             // 
-            this.txtTaskTitle.Location = new System.Drawing.Point(184, 80);
+            this.txtTaskTitle.Location = new System.Drawing.Point(266, 78);
             this.txtTaskTitle.Name = "txtTaskTitle";
             this.txtTaskTitle.Size = new System.Drawing.Size(263, 22);
             this.txtTaskTitle.TabIndex = 1;
             // 
             // cbEmployees
             // 
+            this.cbEmployees.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbEmployees.FormattingEnabled = true;
-            this.cbEmployees.Location = new System.Drawing.Point(184, 32);
+            this.cbEmployees.Location = new System.Drawing.Point(266, 25);
             this.cbEmployees.Name = "cbEmployees";
             this.cbEmployees.Size = new System.Drawing.Size(190, 24);
             this.cbEmployees.TabIndex = 0;
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.label5);
+            this.tabPage4.Controls.Add(this.panel2);
             this.tabPage4.Controls.Add(this.dgvSubmissions);
-            this.tabPage4.Controls.Add(this.button7);
-            this.tabPage4.Controls.Add(this.button6);
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
@@ -154,30 +154,21 @@
             this.tabPage4.Text = "Tasks Submittion";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.8F);
-            this.label5.Location = new System.Drawing.Point(3, 3);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(168, 26);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "Task Submittion";
-            // 
             // dgvSubmissions
             // 
             this.dgvSubmissions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvSubmissions.Location = new System.Drawing.Point(0, 32);
+            this.dgvSubmissions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvSubmissions.Location = new System.Drawing.Point(3, 3);
             this.dgvSubmissions.Name = "dgvSubmissions";
             this.dgvSubmissions.RowHeadersWidth = 51;
             this.dgvSubmissions.RowTemplate.Height = 24;
-            this.dgvSubmissions.Size = new System.Drawing.Size(1176, 123);
+            this.dgvSubmissions.Size = new System.Drawing.Size(1166, 337);
             this.dgvSubmissions.TabIndex = 7;
+            this.dgvSubmissions.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSubmissions_CellContentClick);
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(8, 183);
+            this.button7.Location = new System.Drawing.Point(871, 32);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(94, 23);
             this.button7.TabIndex = 7;
@@ -187,7 +178,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(149, 183);
+            this.button6.Location = new System.Drawing.Point(1018, 32);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(106, 23);
             this.button6.TabIndex = 6;
@@ -202,7 +193,7 @@
             this.logoutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1192, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1192, 30);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -221,6 +212,30 @@
             this.logoutToolStripMenuItem1.Text = "Logout";
             this.logoutToolStripMenuItem1.Click += new System.EventHandler(this.logoutToolStripMenuItem1_Click);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.rtbTaskDescription);
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.cbEmployees);
+            this.panel1.Controls.Add(this.txtTaskTitle);
+            this.panel1.Location = new System.Drawing.Point(315, 6);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(600, 450);
+            this.panel1.TabIndex = 10;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.button7);
+            this.panel2.Controls.Add(this.button6);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(3, 270);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1166, 70);
+            this.panel2.TabIndex = 10;
+            // 
             // ManagerDashboardForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -233,12 +248,13 @@
             this.Load += new System.EventHandler(this.ManagerDashboardForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
             this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSubmissions)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -262,6 +278,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
     }
 }

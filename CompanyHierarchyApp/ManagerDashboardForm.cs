@@ -51,32 +51,94 @@ namespace CompanyHierarchyApp
         // =========================
         private void ApplyManagerTheme()
         {
-            // Form Setup
+            // 1. Form Setup
             this.Text = "Manager Dashboard";
             this.WindowState = FormWindowState.Maximized;
             this.BackColor = bgColor;
             this.Font = new Font("Segoe UI", 10);
 
-            // MenuStrip Styling
+            // 2. MenuStrip Styling
             if (this.MainMenuStrip != null)
             {
                 this.MainMenuStrip.BackColor = primaryColor;
                 this.MainMenuStrip.ForeColor = Color.White;
+                this.MainMenuStrip.RenderMode = ToolStripRenderMode.System;
             }
 
-            // Style DataGridView (With the Selection Fix)
+            // 3. TabControl Styling
+            foreach (Control c in this.Controls)
+            {
+                if (c is TabControl tc)
+                {
+                    tc.Appearance = TabAppearance.FlatButtons;
+                    tc.SizeMode = TabSizeMode.Fixed;
+                    tc.ItemSize = new Size(150, 40);
+                    tc.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+
+                    foreach (TabPage page in tc.TabPages)
+                    {
+                        page.BackColor = Color.WhiteSmoke;
+                        page.Padding = new Padding(0);
+
+                        // Auto-style the panels we added in the designer
+                        foreach (Control child in page.Controls)
+                        {
+                            if (child is Panel pnl)
+                            {
+                                // If it's the "Assign Card" (Centered Panel)
+                                if (pnl.Name == "pnlAssignCard")
+                                {
+                                    pnl.BackColor = Color.White;
+                                    pnl.BorderStyle = BorderStyle.FixedSingle; // Thin border for the card
+                                    CenterControl(pnl); // Force it to center
+                                }
+                                // If it's the Bottom Action Bar
+                                else if (pnl.Dock == DockStyle.Bottom)
+                                {
+                                    pnl.BackColor = Color.White;
+                                    pnl.Padding = new Padding(15);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 4. Style Grid
             StyleGrid(dgvSubmissions);
 
-            // Style Action Buttons
+            // 5. Style Buttons
             StyleButton(button1, primaryColor); // Assign Task
             StyleButton(button7, successColor); // Approve
             StyleButton(button6, dangerColor);  // Reject
 
-            // Style Inputs
+            // 6. Style Inputs
             StyleInput(txtTaskTitle);
             StyleInput(rtbTaskDescription);
             StyleInput(cbEmployees);
+
+            // Hook the Resize event to keep the card centered if user resizes window
+            this.Resize += (s, e) => {
+                // Find the panel again to re-center it
+                var pnl = this.Controls.Find("pnlAssignCard", true).FirstOrDefault();
+                if (pnl != null) CenterControl(pnl);
+            };
         }
+
+        // ✅ NEW HELPER: Centers a control within its parent
+        private void CenterControl(Control ctrl)
+        {
+            if (ctrl.Parent != null)
+            {
+                ctrl.Location = new Point(
+                    (ctrl.Parent.ClientSize.Width - ctrl.Width) / 2,
+                    (ctrl.Parent.ClientSize.Height - ctrl.Height) / 2
+                );
+            }
+        }
+
+        // (Keep your StyleGrid, StyleButton, StyleInput methods exactly as they were in the previous step)
+        // Just ensure StyleGrid has "grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;"
 
         private void StyleGrid(DataGridView grid)
         {
@@ -347,6 +409,11 @@ VALUES (@t, @d, @to, @by, 'Pending')";
         }
 
         private void tabPage2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dgvSubmissions_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }

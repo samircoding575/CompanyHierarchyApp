@@ -38,19 +38,51 @@ namespace CompanyHierarchyApp
             // 1. Form Style
             this.Text = "My Notifications";
             this.BackColor = backgroundColor;
-            this.StartPosition = FormStartPosition.CenterParent; // Opens centered over the dashboard
-            this.FormBorderStyle = FormBorderStyle.FixedDialog; // Clean dialog style
+            this.StartPosition = FormStartPosition.CenterParent;
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Size = new Size(600, 500); // Set a reasonable default size
+            this.Size = new Size(700, 500); // Slightly wider for buttons
             this.Font = new Font("Segoe UI", 10, FontStyle.Regular);
 
-            // 2. DataGridView Style
-            // We assume the grid is named 'dgvNotifications'
+            // 2. Create a Bottom Action Panel (Holds the buttons)
+            // We create this dynamically so you don't have to drag a panel in the designer
+            Panel pnlBottom = new Panel();
+            pnlBottom.Height = 80;
+            pnlBottom.Dock = DockStyle.Bottom;
+            pnlBottom.BackColor = Color.WhiteSmoke;
+            pnlBottom.Padding = new Padding(15);
+            // Draw a subtle top border line
+            pnlBottom.Paint += (s, e) => { e.Graphics.DrawLine(Pens.LightGray, 0, 0, pnlBottom.Width, 0); };
+            this.Controls.Add(pnlBottom);
+
+            // 3. Configure Buttons (Move them into the panel)
+
+            // "Mark as Read" Button (Primary Action - Right Aligned)
+            button2.Parent = pnlBottom; // Move inside panel
+            button2.Text = "Mark as Read";
+            button2.Size = new Size(160, 40);
+            // Position: Right side with padding
+            button2.Location = new Point(pnlBottom.Width - 180, 20);
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            StyleButton(button2, primaryColor);
+
+            // "Delete" Button (Secondary Action - Left of the Read button)
+            button1.Parent = pnlBottom; // Move inside panel
+            button1.Text = "Delete Selected";
+            button1.Size = new Size(160, 40);
+            // Position: To the left of button2
+            button1.Location = new Point(pnlBottom.Width - 350, 20);
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            StyleButton(button1, Color.IndianRed); // Red for delete
+
+            // 4. DataGridView Style
+            dgvNotifications.Parent = this; // Ensure grid is on the form, not the panel
             dgvNotifications.BackgroundColor = backgroundColor;
             dgvNotifications.BorderStyle = BorderStyle.None;
-            dgvNotifications.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal; // Clean horizontal lines
-            dgvNotifications.Dock = DockStyle.Fill; // Fill the whole form
+            dgvNotifications.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvNotifications.Dock = DockStyle.Fill; // Fill the REMAINING space above the panel
+            dgvNotifications.BringToFront(); // Ensure it doesn't get covered
 
             // Header Style
             dgvNotifications.EnableHeadersVisualStyles = false;
@@ -58,7 +90,7 @@ namespace CompanyHierarchyApp
             dgvNotifications.ColumnHeadersDefaultCellStyle.BackColor = primaryColor;
             dgvNotifications.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dgvNotifications.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            dgvNotifications.ColumnHeadersHeight = 40;
+            dgvNotifications.ColumnHeadersHeight = 45;
 
             // Row Style
             dgvNotifications.DefaultCellStyle.BackColor = Color.White;
@@ -66,14 +98,26 @@ namespace CompanyHierarchyApp
             dgvNotifications.DefaultCellStyle.SelectionBackColor = selectionColor;
             dgvNotifications.DefaultCellStyle.SelectionForeColor = Color.Black;
             dgvNotifications.DefaultCellStyle.Padding = new Padding(5);
-            dgvNotifications.RowTemplate.Height = 35; // More breathing room
+            dgvNotifications.RowTemplate.Height = 40;
 
-            // Layout
+            // Grid Behavior
             dgvNotifications.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvNotifications.RowHeadersVisible = false; // Hide the ugly left selector column
+            dgvNotifications.RowHeadersVisible = false;
             dgvNotifications.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvNotifications.AllowUserToAddRows = false;
             dgvNotifications.ReadOnly = true;
+        }
+
+        // Helper Method for Button Styling
+        private void StyleButton(Button btn, Color color)
+        {
+            if (btn == null) return;
+            btn.BackColor = color;
+            btn.ForeColor = Color.White;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Cursor = Cursors.Hand;
+            btn.Font = new Font("Segoe UI", 10, FontStyle.Bold);
         }
 
         void LoadNotifications()

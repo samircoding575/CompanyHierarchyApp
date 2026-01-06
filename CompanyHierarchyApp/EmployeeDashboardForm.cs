@@ -41,119 +41,118 @@ namespace CompanyHierarchyApp
         // =========================
         // NEW UI & LAYOUT METHOD
         // =========================
+        // =========================
+        // NEW UI & LAYOUT METHOD
+        // =========================
         private void ApplyDashboardTheme()
         {
             // 1. Form Global Style
-            this.Text = "Employee Dashboard";
-            this.WindowState = FormWindowState.Maximized; // Dashboards look best full screen
-            this.BackColor = backgroundColor;
+            this.Text = "Employee Workspace";
+            this.WindowState = FormWindowState.Maximized;
+            this.BackColor = Color.WhiteSmoke;
             this.Font = new Font("Segoe UI", 10);
 
-            // 2. Style MenuStrip (Assuming it's named menuStrip1 based on toolstrip items)
+            // 2. MenuStrip Styling
             if (this.MainMenuStrip != null)
             {
                 this.MainMenuStrip.BackColor = primaryColor;
                 this.MainMenuStrip.ForeColor = Color.White;
                 this.MainMenuStrip.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-                this.MainMenuStrip.Padding = new Padding(10, 5, 10, 5);
             }
 
-            // --- LAYOUT STRATEGY: Docking ---
-            // We anchor the Profile to Top, Submission to Bottom, and Tasks to Fill the center.
-
-            // 3. GroupBox 1: Personal Info (The Top Banner)
-            groupBox1.Text = "  My Profile  ";
-            groupBox1.Dock = DockStyle.Top;
-            groupBox1.Height = 110; // Fixed height for banner
-            groupBox1.BackColor = Color.White;
-            groupBox1.Font = new Font("Segoe UI", 11, FontStyle.Bold);
-            groupBox1.ForeColor = primaryColor;
-
-            // Organize Labels inside GB1 (Flow logic)
-            lblFullName.Font = new Font("Segoe UI", 14, FontStyle.Bold);
-            lblFullName.ForeColor = Color.Black;
-            lblFullName.Location = new Point(30, 40);
-
-            lblRole.Font = new Font("Segoe UI", 10, FontStyle.Regular);
-            lblRole.ForeColor = Color.Gray;
-            lblRole.Location = new Point(30, 70);
-
-            lblEmail.Font = new Font("Segoe UI", 10, FontStyle.Regular);
-            lblEmail.ForeColor = Color.Gray;
-            lblEmail.Location = new Point(300, 70); // spaced out
-
-            // 4. GroupBox 3: Task Submission (The Bottom Action Area)
-            groupBox3.Text = "  Submit Update / Complete Task  ";
-            groupBox3.Dock = DockStyle.Bottom;
-            groupBox3.Height = 180; // Enough space for text box
-            groupBox3.BackColor = Color.White;
-            groupBox3.ForeColor = primaryColor;
-
-            // Layout controls inside GB3
-            // Label for dropdown
-            if (cbPendingTasks.Parent != null)
+            // 3. Header Panel (Profile)
+            // Finds the panel docked to the TOP (created in Designer) and styles it
+            foreach (Control c in this.Controls)
             {
-                // Find the label associated with the combo box (assuming there is one, or we position relative)
-                cbPendingTasks.Location = new Point(30, 50);
-                cbPendingTasks.Width = 300;
+                if (c is Panel pnl)
+                {
+                    if (pnl.Dock == DockStyle.Top) // The Header Panel
+                    {
+                        pnl.BackColor = Color.White;
+                        pnl.Padding = new Padding(20);
+
+                        // Style the labels inside this panel
+                        lblRole.Font = new Font("Segoe UI", 16, FontStyle.Bold);
+                        lblRole.ForeColor = primaryColor;
+
+                        lblRole.ForeColor = Color.Gray;
+                        lblRole.Font = new Font("Segoe UI", 11);
+
+                        lblEmail.ForeColor = Color.Gray;
+                        lblEmail.Font = new Font("Segoe UI", 11);
+                    }
+                    else if (pnl.Dock == DockStyle.Bottom) // The Action Panel
+                    {
+                        pnl.BackColor = Color.White;
+                        pnl.Padding = new Padding(15);
+                        // Add a visual border line at the top of this panel
+                        pnl.Paint += (s, paintE) => {
+                            paintE.Graphics.DrawLine(Pens.LightGray, 0, 0, pnl.Width, 0);
+                        };
+                    }
+                }
             }
 
-            rtbSubmissionMessage.Location = new Point(350, 40);
-            rtbSubmissionMessage.Height = 100;
-            rtbSubmissionMessage.Width = 400;
-            rtbSubmissionMessage.BorderStyle = BorderStyle.FixedSingle;
+            // 4. Style Grid
+            StyleGrid(dgvMyTasks);
 
-            // Submit Button
-            button2.Text = "SUBMIT UPDATE";
-            button2.BackColor = accentColor; // Orange for action
-            button2.ForeColor = Color.White;
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.FlatAppearance.BorderSize = 0;
-            button2.Location = new Point(780, 40);
-            button2.Size = new Size(150, 40);
-            button2.Cursor = Cursors.Hand;
+            // 5. Style Inputs & Buttons
+            StyleButton(button2, accentColor);  // Submit Button (Orange)
 
-            // 5. GroupBox 2: Task List (The Main Content)
-            groupBox2.Text = "  My Assigned Tasks  ";
-            groupBox2.Dock = DockStyle.Fill; // Fills the space between Top and Bottom
-            groupBox2.BackColor = Color.White;
-            groupBox2.ForeColor = primaryColor;
+            StyleInput(cbPendingTasks);
+            StyleInput(nudTimeSpent);
+            StyleInput(rtbSubmissionMessage);
+        }
 
-            // Fix Z-Order so Fill works correctly between Top and Bottom
-            groupBox2.BringToFront();
+        // Helper: Grid Styling
+        private void StyleGrid(DataGridView grid)
+        {
+            if (grid == null) return;
+            grid.BackgroundColor = Color.WhiteSmoke;
+            grid.BorderStyle = BorderStyle.None;
+            grid.EnableHeadersVisualStyles = false;
 
-            // Style DataGridView
-            dgvMyTasks.BackgroundColor = Color.White;
-            dgvMyTasks.BorderStyle = BorderStyle.None;
-            dgvMyTasks.Dock = DockStyle.Fill; // Fill the group box
-            dgvMyTasks.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvMyTasks.EnableHeadersVisualStyles = false;
-            dgvMyTasks.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgvMyTasks.ColumnHeadersDefaultCellStyle.BackColor = primaryColor;
-            dgvMyTasks.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvMyTasks.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            dgvMyTasks.ColumnHeadersHeight = 40;
-            dgvMyTasks.DefaultCellStyle.SelectionBackColor = Color.AliceBlue;
-            dgvMyTasks.DefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvMyTasks.DefaultCellStyle.Font = new Font("Segoe UI", 10);
-            dgvMyTasks.RowHeadersVisible = false;
+            // Headers
+            grid.ColumnHeadersDefaultCellStyle.BackColor = primaryColor;
+            grid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            grid.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            grid.ColumnHeadersHeight = 40;
+            grid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
 
-            // Style Refresh Button (button1) inside GB2
-            // We need to dock it or float it. Let's dock it to the top of GB2 or float it top-right
-            Panel pnlGridHeader = new Panel(); // Create a small header panel for the Refresh button
-            pnlGridHeader.Height = 50;
-            pnlGridHeader.Dock = DockStyle.Top;
-            pnlGridHeader.Parent = groupBox2;
+            // Rows
+            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(214, 234, 248);
+            grid.DefaultCellStyle.SelectionForeColor = Color.Black;
+            grid.DefaultCellStyle.Padding = new Padding(5);
+            grid.RowTemplate.Height = 35;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.White;
+            grid.RowsDefaultCellStyle.BackColor = Color.FromArgb(249, 249, 249);
 
-            button1.Parent = pnlGridHeader; // Move button to this panel
-            button1.Text = "Refresh List";
-            button1.BackColor = secondaryColor;
-            button1.ForeColor = Color.White;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.FlatAppearance.BorderSize = 0;
-            button1.Size = new Size(120, 35);
-            button1.Location = new Point(20, 10); // Left align in the header panel
-            button1.Cursor = Cursors.Hand;
+            // Layout
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.RowHeadersVisible = false;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.ReadOnly = true;
+        }
+
+        // Helper: Button Styling
+        private void StyleButton(Button btn, Color color)
+        {
+            if (btn == null) return;
+            btn.BackColor = color;
+            btn.ForeColor = Color.White;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Cursor = Cursors.Hand;
+            btn.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            btn.Height = 40;
+        }
+
+        // Helper: Input Styling
+        private void StyleInput(Control ctrl)
+        {
+            if (ctrl == null) return;
+            ctrl.BackColor = Color.WhiteSmoke;
+            ctrl.Font = new Font("Segoe UI", 11);
         }
         void LoadEmployeeInfo()
         {
@@ -176,9 +175,9 @@ WHERE e.EmployeeId = @id";
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    lblFullName.Text = reader.GetString(0);
+                    lblRole.Text = reader.GetString(0);
                     lblEmail.Text = reader.GetString(1);
-                    lblRole.Text = reader.GetString(2);
+                    lblFullName.Text = reader.GetString(2);
                 }
                 reader.Close();
             }
@@ -385,6 +384,21 @@ VALUES (@t, @e, @m, @time, 'Pending', '')", conn);
         }
 
         private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dgvMyTasks_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel4_Paint(object sender, PaintEventArgs e)
         {
 
         }
