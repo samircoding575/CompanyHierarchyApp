@@ -234,27 +234,32 @@ WHERE t.AssignedTo = @id";
 
         void LoadPendingTasks()
         {
+            // NEW: Added 'Description' to the query
             string query = @"
-        SELECT TaskId, Title
+        SELECT TaskId, Title, Description
         FROM Tasks
         WHERE AssignedTo = @id
         AND (Status = 'Pending' OR Status = 'Rejected')";
 
             DataTable dt = new DataTable();
-            SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@id", LoggedInEmployeeId);
+
+            // Safety Check: Clear existing connection if open
+            if (conn.State == ConnectionState.Open) conn.Close();
 
             try
             {
                 conn.Open();
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", LoggedInEmployeeId);
+
                 SqlDataReader reader = cmd.ExecuteReader();
                 dt.Load(reader);
                 reader.Close();
 
                 cbPendingTasks.DataSource = dt;
                 cbPendingTasks.DisplayMember = "Title";
-                cbPendingTasks.ValueMember = "TaskId"; 
-                cbPendingTasks.SelectedIndex = -1;
+                cbPendingTasks.ValueMember = "TaskId";
+                cbPendingTasks.SelectedIndex = -1; // Default to nothing selected
             }
             catch (Exception ex)
             {
@@ -284,7 +289,21 @@ WHERE t.AssignedTo = @id";
 
         private void cbPendingTasks_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (cbPendingTasks.SelectedIndex != -1)
+            {
+                // When binding a DataTable, the SelectedItem is a 'DataRowView'
+                DataRowView row = (DataRowView)cbPendingTasks.SelectedItem;
 
+                // Extract the description safely
+                string desc = row["Description"].ToString();
+
+                // Update the label
+                lblTaskDescription.Text = string.IsNullOrEmpty(desc) ? "No description provided." : desc;
+            }
+            else
+            {
+                lblTaskDescription.Text = "Select a task to view details...";
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)

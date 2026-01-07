@@ -67,7 +67,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
-            this.label1.Location = new System.Drawing.Point(7, 58);
+            this.label1.Location = new System.Drawing.Point(19, 56);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(325, 16);
             this.label1.TabIndex = 9;
@@ -100,9 +100,9 @@
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.txtCode);
             this.groupBox1.Controls.Add(this.txtNewPassword);
-            this.groupBox1.Location = new System.Drawing.Point(167, 26);
+            this.groupBox1.Location = new System.Drawing.Point(154, 26);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(337, 393);
+            this.groupBox1.Size = new System.Drawing.Size(350, 393);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             // 

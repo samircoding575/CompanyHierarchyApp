@@ -29,32 +29,33 @@
         private void InitializeComponent()
         {
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dgvMyTasks = new System.Windows.Forms.DataGridView();
+            this.pnlAction = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.nudTimeSpent = new System.Windows.Forms.NumericUpDown();
             this.button2 = new System.Windows.Forms.Button();
-            this.rtbSubmissionMessage = new System.Windows.Forms.RichTextBox();
+            this.nudTimeSpent = new System.Windows.Forms.NumericUpDown();
             this.cbPendingTasks = new System.Windows.Forms.ComboBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.pageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.notificationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewNotificationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rtbSubmissionMessage = new System.Windows.Forms.RichTextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.dgvMyTasks = new System.Windows.Forms.DataGridView();
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.lblEmail = new System.Windows.Forms.Label();
             this.lblFullName = new System.Windows.Forms.Label();
             this.lblRole = new System.Windows.Forms.Label();
-            this.pnlAction = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.pageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.notificationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewNotificationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblTaskDescription = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMyTasks)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTimeSpent)).BeginInit();
-            this.menuStrip1.SuspendLayout();
-            this.pnlHeader.SuspendLayout();
             this.pnlAction.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTimeSpent)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvMyTasks)).BeginInit();
+            this.pnlHeader.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox2
@@ -70,17 +71,30 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
             // 
-            // dgvMyTasks
+            // pnlAction
             // 
-            this.dgvMyTasks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvMyTasks.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvMyTasks.Location = new System.Drawing.Point(3, 118);
-            this.dgvMyTasks.Name = "dgvMyTasks";
-            this.dgvMyTasks.RowHeadersWidth = 51;
-            this.dgvMyTasks.RowTemplate.Height = 24;
-            this.dgvMyTasks.Size = new System.Drawing.Size(1162, 361);
-            this.dgvMyTasks.TabIndex = 3;
-            this.dgvMyTasks.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMyTasks_CellContentClick);
+            this.pnlAction.Controls.Add(this.lblTaskDescription);
+            this.pnlAction.Controls.Add(this.label3);
+            this.pnlAction.Controls.Add(this.label1);
+            this.pnlAction.Controls.Add(this.button2);
+            this.pnlAction.Controls.Add(this.nudTimeSpent);
+            this.pnlAction.Controls.Add(this.cbPendingTasks);
+            this.pnlAction.Controls.Add(this.rtbSubmissionMessage);
+            this.pnlAction.Controls.Add(this.label2);
+            this.pnlAction.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlAction.Location = new System.Drawing.Point(3, 289);
+            this.pnlAction.Name = "pnlAction";
+            this.pnlAction.Size = new System.Drawing.Size(1162, 190);
+            this.pnlAction.TabIndex = 11;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(390, 11);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(78, 16);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Description:";
             // 
             // label1
             // 
@@ -90,22 +104,6 @@
             this.label1.Size = new System.Drawing.Size(79, 16);
             this.label1.TabIndex = 10;
             this.label1.Text = "Time Spent:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 11);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(87, 16);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "Select a task:";
-            // 
-            // nudTimeSpent
-            // 
-            this.nudTimeSpent.Location = new System.Drawing.Point(220, 33);
-            this.nudTimeSpent.Name = "nudTimeSpent";
-            this.nudTimeSpent.Size = new System.Drawing.Size(120, 22);
-            this.nudTimeSpent.TabIndex = 6;
             // 
             // button2
             // 
@@ -117,6 +115,22 @@
             this.button2.Text = "Submit";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // nudTimeSpent
+            // 
+            this.nudTimeSpent.Location = new System.Drawing.Point(220, 33);
+            this.nudTimeSpent.Name = "nudTimeSpent";
+            this.nudTimeSpent.Size = new System.Drawing.Size(120, 22);
+            this.nudTimeSpent.TabIndex = 6;
+            // 
+            // cbPendingTasks
+            // 
+            this.cbPendingTasks.FormattingEnabled = true;
+            this.cbPendingTasks.Location = new System.Drawing.Point(9, 31);
+            this.cbPendingTasks.Name = "cbPendingTasks";
+            this.cbPendingTasks.Size = new System.Drawing.Size(150, 24);
+            this.cbPendingTasks.TabIndex = 3;
+            this.cbPendingTasks.SelectedIndexChanged += new System.EventHandler(this.cbPendingTasks_SelectedIndexChanged);
             // 
             // rtbSubmissionMessage
             // 
@@ -130,56 +144,26 @@
             this.rtbSubmissionMessage.Text = "";
             this.rtbSubmissionMessage.TextChanged += new System.EventHandler(this.rtbSubmissionMessage_TextChanged);
             // 
-            // cbPendingTasks
+            // label2
             // 
-            this.cbPendingTasks.FormattingEnabled = true;
-            this.cbPendingTasks.Location = new System.Drawing.Point(9, 31);
-            this.cbPendingTasks.Name = "cbPendingTasks";
-            this.cbPendingTasks.Size = new System.Drawing.Size(150, 24);
-            this.cbPendingTasks.TabIndex = 3;
-            this.cbPendingTasks.SelectedIndexChanged += new System.EventHandler(this.cbPendingTasks_SelectedIndexChanged);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 11);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(87, 16);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Select a task:";
             // 
-            // menuStrip1
+            // dgvMyTasks
             // 
-            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pageToolStripMenuItem,
-            this.notificationsToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1168, 28);
-            this.menuStrip1.TabIndex = 3;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // pageToolStripMenuItem
-            // 
-            this.pageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.logoutToolStripMenuItem});
-            this.pageToolStripMenuItem.Name = "pageToolStripMenuItem";
-            this.pageToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
-            this.pageToolStripMenuItem.Text = "Page";
-            // 
-            // logoutToolStripMenuItem
-            // 
-            this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(139, 26);
-            this.logoutToolStripMenuItem.Text = "Logout";
-            this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
-            // 
-            // notificationsToolStripMenuItem
-            // 
-            this.notificationsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.viewNotificationsToolStripMenuItem});
-            this.notificationsToolStripMenuItem.Name = "notificationsToolStripMenuItem";
-            this.notificationsToolStripMenuItem.Size = new System.Drawing.Size(108, 24);
-            this.notificationsToolStripMenuItem.Text = "Notifications";
-            // 
-            // viewNotificationsToolStripMenuItem
-            // 
-            this.viewNotificationsToolStripMenuItem.Name = "viewNotificationsToolStripMenuItem";
-            this.viewNotificationsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.viewNotificationsToolStripMenuItem.Text = "View Notifications";
-            this.viewNotificationsToolStripMenuItem.Click += new System.EventHandler(this.viewNotificationsToolStripMenuItem_Click);
+            this.dgvMyTasks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvMyTasks.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvMyTasks.Location = new System.Drawing.Point(3, 118);
+            this.dgvMyTasks.Name = "dgvMyTasks";
+            this.dgvMyTasks.RowHeadersWidth = 51;
+            this.dgvMyTasks.RowTemplate.Height = 24;
+            this.dgvMyTasks.Size = new System.Drawing.Size(1162, 361);
+            this.dgvMyTasks.TabIndex = 3;
+            this.dgvMyTasks.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMyTasks_CellContentClick);
             // 
             // pnlHeader
             // 
@@ -236,29 +220,55 @@
             this.lblRole.TabIndex = 1;
             this.lblRole.Text = "role";
             // 
-            // pnlAction
+            // menuStrip1
             // 
-            this.pnlAction.Controls.Add(this.label3);
-            this.pnlAction.Controls.Add(this.label1);
-            this.pnlAction.Controls.Add(this.button2);
-            this.pnlAction.Controls.Add(this.nudTimeSpent);
-            this.pnlAction.Controls.Add(this.cbPendingTasks);
-            this.pnlAction.Controls.Add(this.rtbSubmissionMessage);
-            this.pnlAction.Controls.Add(this.label2);
-            this.pnlAction.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlAction.Location = new System.Drawing.Point(3, 289);
-            this.pnlAction.Name = "pnlAction";
-            this.pnlAction.Size = new System.Drawing.Size(1162, 190);
-            this.pnlAction.TabIndex = 11;
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.pageToolStripMenuItem,
+            this.notificationsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1168, 28);
+            this.menuStrip1.TabIndex = 3;
+            this.menuStrip1.Text = "menuStrip1";
             // 
-            // label3
+            // pageToolStripMenuItem
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(390, 11);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(78, 16);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "Description:";
+            this.pageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.logoutToolStripMenuItem});
+            this.pageToolStripMenuItem.Name = "pageToolStripMenuItem";
+            this.pageToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
+            this.pageToolStripMenuItem.Text = "Page";
+            // 
+            // logoutToolStripMenuItem
+            // 
+            this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(139, 26);
+            this.logoutToolStripMenuItem.Text = "Logout";
+            this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
+            // 
+            // notificationsToolStripMenuItem
+            // 
+            this.notificationsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewNotificationsToolStripMenuItem});
+            this.notificationsToolStripMenuItem.Name = "notificationsToolStripMenuItem";
+            this.notificationsToolStripMenuItem.Size = new System.Drawing.Size(108, 24);
+            this.notificationsToolStripMenuItem.Text = "Notifications";
+            // 
+            // viewNotificationsToolStripMenuItem
+            // 
+            this.viewNotificationsToolStripMenuItem.Name = "viewNotificationsToolStripMenuItem";
+            this.viewNotificationsToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+            this.viewNotificationsToolStripMenuItem.Text = "View Notifications";
+            this.viewNotificationsToolStripMenuItem.Click += new System.EventHandler(this.viewNotificationsToolStripMenuItem_Click);
+            // 
+            // lblTaskDescription
+            // 
+            this.lblTaskDescription.Location = new System.Drawing.Point(12, 78);
+            this.lblTaskDescription.Name = "lblTaskDescription";
+            this.lblTaskDescription.Size = new System.Drawing.Size(203, 63);
+            this.lblTaskDescription.TabIndex = 12;
+            this.lblTaskDescription.Text = "label4";
             // 
             // EmployeeDashboardForm
             // 
@@ -271,13 +281,13 @@
             this.Text = "ol";
             this.Load += new System.EventHandler(this.EmployeeDashboardForm_Load);
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMyTasks)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTimeSpent)).EndInit();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.pnlHeader.ResumeLayout(false);
             this.pnlAction.ResumeLayout(false);
             this.pnlAction.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTimeSpent)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvMyTasks)).EndInit();
+            this.pnlHeader.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -305,5 +315,6 @@
         private System.Windows.Forms.Label lblRole;
         private System.Windows.Forms.Panel pnlAction;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblTaskDescription;
     }
 }
